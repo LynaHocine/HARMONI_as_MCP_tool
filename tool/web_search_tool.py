@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-def web_search_tool(query):
+def web_search_tool(query) -> dict:
     """It takes the user query (text) as input.
     Outputs result of the search 
     """

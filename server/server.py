@@ -23,7 +23,7 @@ def call_web_search_tool(query : str) -> str :
 def main():
     mcp.run()
     #we can also use 
-    #mcp.run(mode="http", host="127.0.0.1", port=8000)
+    #mcp.run(transport="http", host="127.0.0.1", port=8000)
     #if we want to use http and if is only going to run locally
 
 
