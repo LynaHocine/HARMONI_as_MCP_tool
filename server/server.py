@@ -1,5 +1,5 @@
 from mcp.server.fastmcp import FastMCP
-from tool.web_search_tool import web_search_tool
+from tool.web_search_tool import WebSearchTool
 
 mcp = FastMCP("web-search") #create mcp server
 
