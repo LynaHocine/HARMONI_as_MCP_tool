@@ -14,16 +14,16 @@ def call_web_search_tool(query : str) -> str :
     Returns :
         str : the response collected in the web
     """
-    response_dic = web_search_tool(query)
+    response_dic = WebSearchTool.web_search_tool(query)
     return response_dic["result"]
 
 
 
 
 def main():
-    mcp.run()
+    #mcp.run()
     #we can also use 
-    #mcp.run(transport="http", host="127.0.0.1", port=8000)
+    mcp.run()
     #if we want to use http and if is only going to run locally
 
 
