@@ -33,7 +33,7 @@ cd HARMONI_as_MCP_tool
     - On Linux/macOS:
 ```bash
     python 3.12 -m venv venv
-    source venv/bin/activate*
+    source venv/bin/activate
 ```
 
     - On Windows:
@@ -49,6 +49,8 @@ pip install langchain-ollama langchain-mcp-adapters langgraph mcp fastmcp serpap
 4. Create a `.env` file in the root folder:
 ```
 SERPAPI_KEY=your_key
+
+```
 
 ## Execution 
 ```bash
