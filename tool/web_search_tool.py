@@ -19,13 +19,7 @@ class WebSearchTool:
         Detects the type of input and uses the preprocessing
         functions to convert it to text if needed
         """
-        #image url
-        if input.startswith("http") and (input.endswith(".png")
-                                         or input.endswith(".jpg")
-                                         or input.endswith(".jpeg")
-                                         ) :
-            return ImagePreprocessor.image_to_base64(input)
-        
+        #image handled directly by LLM
         #audio file
         if input.endswith(".wav"):
             return SpeechToText.speech_to_text()

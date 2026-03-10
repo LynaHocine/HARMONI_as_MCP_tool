@@ -1,11 +1,13 @@
 import speech_recognition as sr
 
 class SpeechToText:
+    @staticmethod
     def print_mic_device_index():
         for index, name in enumerate(sr.Microphone.list_microphone_names()):
             print(name, ", device_index=", index)
 
-    def speech_to_text(device_index, language = "en-US"):
+    @staticmethod
+    def speech_to_text(device_index=0, language = "en-US"):
         r = sr.Recognizer()
         with sr.Microphone(device_index = device_index) as source : 
             print("Start talking")
