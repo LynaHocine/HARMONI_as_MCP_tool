@@ -6,7 +6,7 @@ This integration aims to make HARMONI accessible as a standardized context provi
 
 We seek to position HARMONI as a general-purpose multimodal interface layer that allows language and vision language models to operate robustly in real-world, multi-user interactive environments.
 
-##Project Structure
+## Project Structure
 ```
 HARMONI_as_MCP_tool/
 ├── agent/          # ReAct agent using LangGraph + LangChain
