@@ -17,6 +17,7 @@ class SpeechToText:
                 print("You said : ", text)
             except:
                 print("Please try again")
+        return text
 
 if __name__ == "__main__":
     SpeechToText.speech_to_text(device_index=1)
