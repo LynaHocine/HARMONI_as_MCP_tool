@@ -30,13 +30,12 @@ cd HARMONI_as_MCP_tool
 ```
 
 2. Create and activate a virtual environment (recommended: Python 3.11 or 3.12)
-    - On Linux/macOS:
+- On Linux/macOS:
 ```bash
     python 3.12 -m venv venv
     source venv/bin/activate
 ```
-
-    - On Windows:
+- On Windows:
 ```bash
     python3.12 -m venv venv
     venv\Scripts\activate
