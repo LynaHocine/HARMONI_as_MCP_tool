@@ -9,14 +9,16 @@ class SpeechToText:
     @staticmethod
     def speech_to_text(device_index=0, language = "en-US"):
         r = sr.Recognizer()
+        text = None
         with sr.Microphone(device_index = device_index) as source : 
             print("Start talking")
-            audio = r.listen(source)
-            try : 
-                text = r.recognize_google(audio, language = language)
-                print("You said : ", text)
-            except:
-                print("Please try again")
+            while not text : 
+                audio = r.listen(source)
+                try : 
+                    text = r.recognize_google(audio, language = language)
+                    print("You said : ", text)
+                except:
+                    print("Please try again")
         return text
 
 if __name__ == "__main__":

@@ -7,7 +7,13 @@ import requests
 import time
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+SERVER_DIR = os.path.join(BASE_DIR, "server")
+SERVER_FILE = os.path.join(SERVER_DIR, "server.py")
+
 from preprocessor.image_processor import ImagePreprocessor
+from preprocessor.speech_processor import SpeechToText
 from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -29,9 +35,9 @@ async def run_agent():
     client = MultiServerMCPClient({
         "web-search" :{
             "command" : "python",
-            "args" : ["../server/server.py"],
+            "args" : [SERVER_FILE],
             "transport" : "stdio",
-            "cwd": "../server",
+            "cwd": SERVER_DIR,
         }
     })
         
@@ -39,8 +45,12 @@ async def run_agent():
     agent = create_react_agent(agent_model, tools)
 
     while True: 
-        print("ask question: ", end="", flush=True)
-        user_input = input()
+        mode = input("Type 't' for text or 'v' for voice : ")
+        if mode == "v" or mode == "V":
+            user_input = SpeechToText.speech_to_text(device_index=1)
+        else : 
+            print("ask question: ", end="", flush=True)
+            user_input = input()
         
         total_timer = time.perf_counter()
         #searching for image url in the message
