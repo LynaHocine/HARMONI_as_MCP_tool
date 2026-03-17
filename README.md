@@ -43,7 +43,7 @@ cd HARMONI_as_MCP_tool
 
 3. Install dependencies:
 ```bash
-pip install langchain-ollama langchain-mcp-adapters langgraph mcp fastmcp serpapi python-dotenv SpeechRecognition requests
+pip install -r requirements.txt
 ```
 4. Create a `.env` file in the root folder:
 ```
