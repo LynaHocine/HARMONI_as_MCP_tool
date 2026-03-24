@@ -10,6 +10,7 @@ We seek to position HARMONI as a general-purpose multimodal interface layer that
 ```
 HARMONI_as_MCP_tool/
 ├── agent/          # ReAct agent using LangGraph + LangChain
+├── interface/          # Streamlit UI for interacting with the agent
 ├── server/         # MCP server exposing web search tool 
 ├── tool/           # Web search tool using SerpAPI
 └── preprocessor/   # Multimodal input processors (image, audio, video)
@@ -32,13 +33,13 @@ cd HARMONI_as_MCP_tool
 2. Create and activate a virtual environment (recommended: Python 3.11 or 3.12)
 - On Linux/macOS:
 ```bash
-    python 3.12 -m venv venv
-    source venv/bin/activate
+python 3.12 -m venv venv
+source venv/bin/activate
 ```
 - On Windows:
 ```bash
-    python3.12 -m venv venv
-    venv\Scripts\activate
+python3.12 -m venv venv
+venv\Scripts\activate
 ```
 
 3. Install dependencies:
@@ -48,7 +49,6 @@ pip install -r requirements.txt
 4. Create a `.env` file in the root folder:
 ```
 SERPAPI_KEY=your_key
-
 ```
 
 ## Execution 
@@ -61,7 +61,6 @@ python agent.py
 
 The server starts automatically. You can then ask your question:
 ```
-
 ask question: type your question
 ```
 
