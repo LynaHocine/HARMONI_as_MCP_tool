@@ -10,7 +10,7 @@ We seek to position HARMONI as a general-purpose multimodal interface layer that
 ```
 HARMONI_as_MCP_tool/
 ├── agent/          # ReAct agent using LangGraph + LangChain
-├── interface/          # Streamlit UI for interacting with the agent
+├── interface/      # Streamlit UI for interacting with the agent
 ├── server/         # MCP server exposing web search tool 
 ├── tool/           # Web search tool using SerpAPI
 └── preprocessor/   # Multimodal input processors (image, audio, video)
