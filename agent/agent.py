@@ -18,7 +18,47 @@ from langgraph.prebuilt.chat_agent_executor import create_react_agent
 
 agent_model = ChatOllama(model="gpt-oss:20b", temperature=0)
 
+class MCPAgent : 
+    def __init__(self):
+        self.model = ChatOllama(model="gpt-oss:20b", temperature=0)
+        self.agent = None
+        self.chat_history = []
 
+    async def initialize(self):
+        """
+        Initializes the MCP, tools and agent
+        """ 
+        client = MultiServerMCPClient({
+        "web-search" :{
+            "command" : "python",
+            "args" : [SERVER_FILE],
+            "transport" : "stdio",
+            "cwd": SERVER_DIR,
+        }
+        })
+            
+        tools = await client.get_tools()
+        self.agent = create_react_agent(self.model, tools)
+
+    async def run(self, user_input):
+        self.chat_history.append(HumanMessage(content=user_input))
+
+        response = await self.agent.ainvoke({
+            "messages" : self.chat_history
+        })
+
+        ai_msg = None
+
+        for msg in reversed(response["messages"]):
+            if isinstance(msg, AIMessage) and not msg.tool_calls:
+                ai_msg = msg
+                break
+
+        self.chat_history.append(ai_msg)
+        return ai_msg.content
+
+
+## old version not object oriented
 async def run_agent():
 
     client = MultiServerMCPClient({
@@ -73,8 +113,6 @@ async def run_agent():
         print(f"[Agent time: {agent_elapsed:.2f}s]") 
         print(f"[Total: {total_elapsed:.2f}s]")
         print()
-
-    
 
 if __name__ == "__main__":
     asyncio.run(run_agent())

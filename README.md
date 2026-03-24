@@ -52,6 +52,8 @@ SERPAPI_KEY=your_key
 ```
 
 ## Execution 
+
+- To run the code in the terminal : 
 ```bash
 cd agent
 python agent.py
@@ -63,5 +65,10 @@ The server starts automatically. You can then ask your question:
 ask question: type your question
 ```
 
+- To launch the interface : 
+```bash
+cd interface
+streamlit run app.py
+```
 
 
