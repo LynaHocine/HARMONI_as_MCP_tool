@@ -8,6 +8,7 @@ from tool.web_search_tool import WebSearchTool
 from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage
 from preprocessor.image_processor import ImagePreprocessor
+from tool.harmoni_tool import HarmoniTool
 import asyncio
 
 mcp = FastMCP("web-search") #create mcp server
@@ -43,6 +44,14 @@ async def call_image_processing_tool(source: str, question: str)->str:
     ])
     response = await vision_model.ainvoke([message])
     return response.content
+
+@mcp.tool()
+def call_harmoni_tool(video_path: str, query: str)->str:
+    """Sends video to Harmoni to get user context. 
+    Call this tool when a face is detected in the video.
+    Use the returned context to give a personalized answer.
+    """
+    return HarmoniTool.harmoni_tool(video_path=video_path, query=query)
 
 
 

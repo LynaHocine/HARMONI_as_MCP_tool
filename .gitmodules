@@ -1,0 +1,3 @@
+[submodule "harmoni"]
+	path = harmoni
+	url = https://github.com/hamedR96/HARMONI.git

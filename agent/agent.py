@@ -12,7 +12,7 @@ SERVER_FILE = os.path.join(SERVER_DIR, "server.py")
 
 from preprocessor.speech_processor import SpeechToText
 from langchain_ollama import ChatOllama
-from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
+from langchain_core.messages import HumanMessage, AIMessage, ToolMessage, SystemMessage
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langgraph.prebuilt.chat_agent_executor import create_react_agent
 
@@ -23,6 +23,12 @@ class MCPAgent :
         self.model = ChatOllama(model="gpt-oss:20b", temperature=0)
         self.agent = None
         self.chat_history = []
+        self.system_prompt = SystemMessage(content=(
+            "You are a helpful assistant with access to tools. "
+            "When the user provides an image containing a question, "
+            "extract the question and answer it — use your tools if needed (e.g. web search for current data). "
+            "Do not just describe the image. Actually answer what is being asked."
+        ))
 
     async def initialize(self):
         """
@@ -44,7 +50,7 @@ class MCPAgent :
         self.chat_history.append(HumanMessage(content=user_input))
 
         response = await self.agent.ainvoke({
-            "messages" : self.chat_history
+            "messages" : [self.system_prompt] + self.chat_history
         })
 
         ai_msg = None
