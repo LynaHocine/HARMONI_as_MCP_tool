@@ -28,6 +28,10 @@ class MCPAgent :
             "When the user provides an image containing a question, "
             "extract the question and answer it — use your tools if needed (e.g. web search for current data). "
             "Do not just describe the image. Actually answer what is being asked."
+            "Always call detect_face with the video path if the user provides one"
+            "If a face is detected, call harmoni_tool with the video path and the user's question to get personalized context, the use the context to answer."
+            "If no face is detected (False), answer the question directly without calling HARMONI. "
+            "If"
         ))
 
     async def initialize(self):
