@@ -10,6 +10,7 @@ from langchain_core.messages import HumanMessage
 from preprocessor.image_processor import ImagePreprocessor
 from tool.harmoni_tool import HarmoniTool
 import asyncio
+import cv2
 
 mcp = FastMCP("web-search") #create mcp server
 
@@ -52,6 +53,28 @@ def call_harmoni_tool(video_path: str, query: str)->str:
     Use the returned context to give a personalized answer.
     """
     return HarmoniTool.harmoni_tool(video_path=video_path, query=query)
+
+#for face detection
+@mcp.tool()
+def detect_face(video_path:str) -> bool:
+    """Returns True if a face is detected in the video
+    Call this tool when a video is provided as input"""
+    cap = cv2.VideoCapture(video_path)
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades +'haarcascade_frontalface_default.xml')
+
+    detected = False
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+        if len(faces) > 0:
+            detected = True
+            break
+    
+    cap.release()
+    return detected
 
 
 
