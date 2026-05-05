@@ -11,6 +11,7 @@ from preprocessor.image_processor import ImagePreprocessor
 from tool.harmoni_tool import HarmoniTool
 import asyncio
 import cv2
+import whisper
 
 mcp = FastMCP("web-search") #create mcp server
 
@@ -76,6 +77,13 @@ def detect_face(video_path:str) -> bool:
     cap.release()
     return detected
 
+@mcp.tool()
+def transcribe_video(video_path: str) -> str:
+    """Transcribes the audio from a video file and returns the spoken text.
+    Call this when no face is detected in the video to extract what was said."""
+    model = whisper.load_model("base")
+    result = model.transcribe(video_path)
+    return result["text"]
 
 
 def main():

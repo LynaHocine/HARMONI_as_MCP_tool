@@ -1,12 +1,11 @@
 import asyncio
 import sys
 import os
-import base64
 import time
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-
 SERVER_DIR = os.path.join(BASE_DIR, "server")
 SERVER_FILE = os.path.join(SERVER_DIR, "server.py")
 
@@ -16,37 +15,31 @@ from langchain_core.messages import HumanMessage, AIMessage, ToolMessage, System
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langgraph.prebuilt.chat_agent_executor import create_react_agent
 
-agent_model = ChatOllama(model="gpt-oss:20b", temperature=0)
 
-class MCPAgent : 
+class MCPAgent:
     def __init__(self):
         self.model = ChatOllama(model="gpt-oss:20b", temperature=0)
         self.agent = None
         self.chat_history = []
         self.system_prompt = SystemMessage(content=(
-            "You are a helpful assistant with access to tools. "
-            "When the user provides an image containing a question, "
-            "extract the question and answer it — use your tools if needed (e.g. web search for current data). "
-            "Do not just describe the image. Actually answer what is being asked."
-            "Always call detect_face with the video path if the user provides one"
-            "If a face is detected, call harmoni_tool with the video path and the user's question to get personalized context, the use the context to answer."
-            "If no face is detected (False), answer the question directly without calling HARMONI. "
-            "If"
+            "You have tools to process video files. "
+            "When the user's message contains a file path ending in .mp4, .mov, or .avi: "
+            "1. Call detect_face with that path. "
+            "2. If True: call call_harmoni_tool with the path and the user's question. Use the returned context to answer. "
+            "3. If False: call transcribe_video with the path. Use the transcript to answer. "
+            "If you need current data (weather, news), also call call_web_search_tool. "
+            "Never call call_image_processing_tool on a video file."
         ))
 
     async def initialize(self):
-        """
-        Initializes the MCP, tools and agent
-        """ 
         client = MultiServerMCPClient({
-        "web-search" :{
-            "command" : "python",
-            "args" : [SERVER_FILE],
-            "transport" : "stdio",
-            "cwd": SERVER_DIR,
-        }
+            "web-search": {
+                "command": "python",
+                "args": [SERVER_FILE],
+                "transport": "stdio",
+                "cwd": SERVER_DIR,
+            }
         })
-            
         tools = await client.get_tools()
         self.agent = create_react_agent(self.model, tools)
 
@@ -54,75 +47,49 @@ class MCPAgent :
         self.chat_history.append(HumanMessage(content=user_input))
 
         response = await self.agent.ainvoke({
-            "messages" : [self.system_prompt] + self.chat_history
+            "messages": [self.system_prompt] + self.chat_history
         })
 
         ai_msg = None
-
-        for msg in reversed(response["messages"]):
-            if isinstance(msg, AIMessage) and not msg.tool_calls:
-                ai_msg = msg
-                break
-
-        self.chat_history.append(ai_msg)
-        return ai_msg.content
-
-
-## old version not object oriented
-async def run_agent():
-
-    client = MultiServerMCPClient({
-        "web-search" :{
-            "command" : "python",
-            "args" : [SERVER_FILE],
-            "transport" : "stdio",
-            "cwd": SERVER_DIR,
-        }
-    })
-        
-    tools = await client.get_tools()
-    agent = create_react_agent(agent_model, tools)
-
-    while True: 
-        mode = input("Type 't' for text or 'v' for voice : ")
-        if mode == "v" or mode == "V":
-            user_input = SpeechToText.speech_to_text(device_index=1)
-        else : 
-            print("ask question: ", end="", flush=True)
-            user_input = input()
-        
-        total_timer = time.perf_counter()
-
-        message = HumanMessage(content = user_input)
-
-        agent_timer = time.perf_counter()
-        response = await agent.ainvoke({
-            "messages" : [message]
-        })
-        agent_elapsed = time.perf_counter() - agent_timer
-
         for msg in response["messages"]:
-
             if isinstance(msg, HumanMessage):
                 print("USER:", msg.content)
-
             elif isinstance(msg, AIMessage):
-                print("AI:", msg.content)
-
                 if msg.tool_calls:
-                    print("TOOL CALL DETECTED:")
-                    for tool in msg.tool_calls:
-                        print(tool)
-                
+                    print("TOOL CALLS:")
+                    for tc in msg.tool_calls:
+                        print(" →", tc["name"], tc["args"])
+                else:
+                    ai_msg = msg
+                    print("AI:", msg.content)
             elif isinstance(msg, ToolMessage):
-                print("TOOL RESPONSE:", msg.content)
-                
+                print("TOOL RESPONSE:", msg.content[:300])
             print()
 
-        total_elapsed = time.perf_counter() - total_timer
-        print(f"[Agent time: {agent_elapsed:.2f}s]") 
-        print(f"[Total: {total_elapsed:.2f}s]")
-        print()
+        if ai_msg:
+            self.chat_history.append(ai_msg)
+            return ai_msg.content
+        return "(no response)"
+
+
+async def main():
+    agent = MCPAgent()
+    await agent.initialize()
+
+    while True:
+        mode = input("Type 't' for text or 'v' for voice : ")
+        if mode.lower() == "v":
+            user_input = SpeechToText.speech_to_text(device_index=1)
+        else:
+            print("ask question: ", end="", flush=True)
+            user_input = input()
+
+        total_timer = time.perf_counter()
+        await agent.run(user_input)
+        elapsed = time.perf_counter() - total_timer
+
+        print(f"[Total: {elapsed:.2f}s]\n")
+
 
 if __name__ == "__main__":
-    asyncio.run(run_agent())
+    asyncio.run(main())

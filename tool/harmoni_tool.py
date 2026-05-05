@@ -33,7 +33,7 @@ class HarmoniTool:
                 data={
                     "emotion": emotion,
                     "current_user": detected_user,
-                    "question": query,
+                    "question": transcript,
                 }
             )
         threading.Thread(target=_update_memory, daemon=True).start()
