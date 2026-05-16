@@ -29,6 +29,7 @@ class MCPAgent:
             "3. If False: call transcribe_video with the path. Use the transcript to answer. "
             "If you need current data (weather, news), also call call_web_search_tool. "
             "Never call call_image_processing_tool on a video file."
+            "If the speaker's name is explicitly known with high confidence, you may greet them naturally by name."
         ))
 
     async def initialize(self):
