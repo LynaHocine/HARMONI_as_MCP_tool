@@ -145,7 +145,7 @@ class ChatBotUI:
             if webrtc_ctx.state.playing:
                 st.success("Recording in progress ...")
 
-                if st.button("⏹️ Stop & Send to Agent"):
+                if st.button("⏹️ Send to Agent"):
                     st.session_state.pending_video_path = temp_video_path
                     st.session_state.recording_state = "stopping"
                     st.rerun()
