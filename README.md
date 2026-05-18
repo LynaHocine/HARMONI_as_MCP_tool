@@ -46,7 +46,7 @@ venv\Scripts\activate
 ```bash
 pip install -r requirements.txt
 ```
-4. Create a `.env` file in the root folder:
+4. Create a `.env` file, encoded in UTF-8, in the root folder:
 ```
 SERPAPI_KEY=your_key
 ```
@@ -70,7 +70,7 @@ cd HARMONI
 #### Environment variables
 
 You will need a *Hugging Face token* and, optionally, an *OpenAI API key*.
-If you don’t already have them set up, create a .env file in the root folder of your project and add the credentials there.
+If you don’t already have them set up, create a .env file in the root folder (encoded in UTF-8) of your project and add the credentials there.
 
 ```bash
 touch .env
