@@ -28,6 +28,7 @@ class MCPAgent:
             "2. If True: call call_harmoni_tool with the path and the user's question. Use the returned context to answer. "
             "3. If False: call transcribe_video with the path. Use the transcript to answer. "
             "If you need current data (weather, news), also call call_web_search_tool. "
+            "Do not repeat or refine the same search multiple times unless the previous result is empty."
             "Never call call_image_processing_tool on a video file."
             "If the speaker's name is explicitly known with high confidence, you may greet them naturally by name."
         ))
