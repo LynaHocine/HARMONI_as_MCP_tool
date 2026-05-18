@@ -67,6 +67,26 @@ git clone https://github.com/hamedR96/HARMONI.git
 cd HARMONI
 ```
 
+#### Environment variables
+
+You will need a *Hugging Face token* and, optionally, an *OpenAI API key*.
+If you don’t already have them set up, create a .env file in the root folder of your project and add the credentials there.
+
+```bash
+touch .env
+```
+
+Then, add the appropriate keys like this:
+- **HuggingFace Token**
+```bash
+echo "HF_TOKEN=your_secret_token_here" >> .env
+```
+- **OpenAI API key**
+```bash
+echo "OPENAI_API_KEY=your_api_key_here" >> .env
+```
+
+
 Activate a virtual environment. You may reuse the same virtual environment created for this MCP tool.
 
 - On Linux/macOS:
